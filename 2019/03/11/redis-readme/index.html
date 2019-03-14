@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.0.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.0.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="这个博客就是一个redis的快速导读。你可以从redis.io.找到更多的细节。这篇博客翻译于本人开始阅读Redis之前所以难免有错误和不到位的地方欢迎指正 什么是Redis? Redis经常被称为数据结构服务器。 这意味着Redis通过一组命令提供对可变数据结构的访问, 使用C/S架构通过发送简单的TCP协议来交互。因此，不同的进程可以以共享方式查询和修改相同的数据结构。 Redis中实现的数">
+<meta name="keywords" content="Redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis入门">
+<meta property="og:url" content="http://yoursite.com/2019/03/11/redis-readme/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="这个博客就是一个redis的快速导读。你可以从redis.io.找到更多的细节。这篇博客翻译于本人开始阅读Redis之前所以难免有错误和不到位的地方欢迎指正 什么是Redis? Redis经常被称为数据结构服务器。 这意味着Redis通过一组命令提供对可变数据结构的访问, 使用C/S架构通过发送简单的TCP协议来交互。因此，不同的进程可以以共享方式查询和修改相同的数据结构。 Redis中实现的数">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/img/1.jpg">
+<meta property="og:updated_time" content="2019-03-12T04:00:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Redis入门">
+<meta name="twitter:description" content="这个博客就是一个redis的快速导读。你可以从redis.io.找到更多的细节。这篇博客翻译于本人开始阅读Redis之前所以难免有错误和不到位的地方欢迎指正 什么是Redis? Redis经常被称为数据结构服务器。 这意味着Redis通过一组命令提供对可变数据结构的访问, 使用C/S架构通过发送简单的TCP协议来交互。因此，不同的进程可以以共享方式查询和修改相同的数据结构。 Redis中实现的数">
+<meta name="twitter:image" content="http://yoursite.com/img/1.jpg">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/03/11/redis-readme/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Redis入门 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/11/redis-readme/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Redis入门
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-03-11 08:34:47" itemprop="dateCreated datePublished" datetime="2019-03-11T08:34:47+08:00">2019-03-11</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-03-12 12:00:00" itemprop="dateModified" datetime="2019-03-12T12:00:00+08:00">2019-03-12</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">Comments: </span>
+                <a href="/2019/03/11/redis-readme/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/03/11/redis-readme/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             Views:  
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Symbols count in article: </span>
+                
+                <span title="Symbols count in article">8k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Reading time &asymp;</span>
+                
+                <span title="Reading time">7 mins.</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="/img/1.jpg" alt="logo"></p>
+<p>这个博客就是一个redis的快速导读。你可以从<a href="https://redis.io" target="_blank" rel="noopener">redis.io</a>.找到更多的细节。<br>这篇博客翻译于本人开始阅读Redis之前所以难免有错误和不到位的地方欢迎指正</p>
+<h2 id="什么是Redis"><a href="#什么是Redis" class="headerlink" title="什么是Redis?"></a>什么是Redis?</h2><hr>
+<p>Redis经常被称为<strong>数据结构</strong>服务器。 这意味着Redis通过一组命令提供对可变数据结构的访问, 使用<strong>C/S</strong>架构通过发送简单的TCP协议来交互。因此，不同的进程可以以共享方式查询和修改相同的数据结构。</p>
+<p>Redis中实现的数据结构具有一些特殊属性:</p>
+<ul>
+<li>Redis可以将数据存放到磁盘中, 即使他们总是在内存中被获取和修改。 这意味着Redis不仅速度快, 而且数据不容易丢失。</li>
+<li>使用数据结构是为了强调内存的效率, 所以在redis中的数据结构模型和其他的高级语言相比可能会使用更少的内存。</li>
+<li>Redis提供了很多传统数据库使用的特性，比如：迁移, 可调控的数据持久化, 集群, 高性能.</li>
+</ul>
+<p>另一个很好的理解是将Redis视为<strong>memcached</strong>的一个更复杂的版本，其中操作不仅仅是SET和GET，而且还可以处理复杂数据类型的操作，如链表，集合，有序数据结构等等。</p>
+<p>如果你想知道更多关于Redis的信息, 下面提供了很好的开始点:</p>
+<ul>
+<li>介绍Redis的数据类型. <a href="http://redis.io/topics/data-types-intro" target="_blank" rel="noopener">http://redis.io/topics/data-types-intro</a></li>
+<li>直接在浏览器中尝试Redis操作. <a href="http://try.redis.io" target="_blank" rel="noopener">http://try.redis.io</a></li>
+<li>Redis所有的操作命令. <a href="http://try.redis.io" target="_blank" rel="noopener">http://redis.io/commands</a></li>
+<li>查看更多的官方文档. <a href="http://redis.io/documentation" target="_blank" rel="noopener">http://redis.io/documentation</a><a id="more"></a>
+<h2 id="构建-Redis"><a href="#构建-Redis" class="headerlink" title="构建 Redis"></a>构建 Redis</h2></li>
+</ul>
+<hr>
+<p>在Redis中实现的数据结构具有一些特殊属性<br>Redis能够在Linux, OSX, OpenBSD, NetBSD, FreeBSD环境下编译<br>Redis提供了大端和小端的架构, 并且都支持32位和64位。</p>
+<p>Redis也可以被编译在Solaris系列的操作系统 (例如SmartOS) 但是不能保证很好的像Linux, OSX, 和 BSD等等操作系统一样良好运行</p>
+<p>构建很简单:</p>
+<pre><code>% make
+</code></pre><p>选择构建32位的Redis:</p>
+<pre><code>% make 32bit
+</code></pre><p>在构建之前可以先试下make命令是否可用:</p>
+<pre><code>% make test
+</code></pre><h2 id="修复依赖项或缓存构建项的问题"><a href="#修复依赖项或缓存构建项的问题" class="headerlink" title="修复依赖项或缓存构建项的问题"></a>修复依赖项或缓存构建项的问题</h2><hr>
+<p>Redis 依赖了在 <code>deps</code> 目录下的一些库。<br><code>make</code>不会自动重新构建就算是依赖项的源文件被改变</p>
+<p>当你使用<code>git pull</code>或者代码内的依赖树以任何方式改变的时候，请务必使用以下内容<br>命令，以便真正的清空工程重新构建：</p>
+<pre><code>make distclean
+</code></pre><p>这会清理: jemalloc, lua, hiredis, linenoise这些依赖项。</p>
+<p>此外，如果您强制某些构建选项，如32位,没有C编译器优化（用于调试目的）和其他类似的构建时间选项，<br>这些选项会无限期缓存，直到您发出<code>make distclean</code>命令。</p>
+<h2 id="处理在编译32位时候产生的问题"><a href="#处理在编译32位时候产生的问题" class="headerlink" title="处理在编译32位时候产生的问题"></a>处理在编译32位时候产生的问题</h2><hr>
+<p>如果你在编译了32位Redis后需要继续编译64位或者相反，你需要在Redis发行版的更目录下运行<code>make distclean</code></p>
+<p>在编译32位的Redis出错的时候, 可以尝试以下步骤:</p>
+<ul>
+<li>安装 libc6-dev-i386 (也尝试下 g++-multilib).</li>
+<li>用以下命令代替 <code>make 32bit</code>:<br><code>make CFLAGS=&quot;-m32 -march=native&quot; LDFLAGS=&quot;-m32&quot;</code></li>
+</ul>
+<h2 id="分配器"><a href="#分配器" class="headerlink" title="分配器"></a>分配器</h2><hr>
+<p>在构建Redis时通过设置<code>MALLOC</code>环境变量选择非默认内存分配器。<br>Redis在默认情况下使用c函数库来编译和链接的， 除了在linux下使jemalloc。 因为使用jemalloc没有c函数库那么多的问题在linux下<br>。<br>强制编译libc编译,使用:</p>
+<pre><code>% make MALLOC=libc
+</code></pre><p>在Mac系统上强制使用jemalloc:</p>
+<pre><code>% make MALLOC=jemalloc
+</code></pre><h2 id="详细构件"><a href="#详细构件" class="headerlink" title="详细构件"></a>详细构件</h2><hr>
+<p>默认情况下，Redis将使用用户友好的彩色输出进行构建。<br>如果要查看更详细的输出，请使用以下内容:</p>
+<pre><code>% make V=1
+</code></pre><h2 id="运行Redis"><a href="#运行Redis" class="headerlink" title="运行Redis"></a>运行Redis</h2><hr>
+<p>使用默认配置运行Redis：</p>
+<pre><code>% cd src
+% ./redis-server
+</code></pre><p>如果你需要使用redis.conf来运行redis，你必须要添加额外点的参数（配置文件的的路径）：</p>
+<pre><code>% cd src
+% ./redis-server /path/to/redis.conf
+</code></pre><p>也可以直接传递参数来改变Redis的配置，使用命令行的例子：</p>
+<pre><code>% ./redis-server --port 9999 --slaveof 127.0.0.1 6379
+% ./redis-server /etc/redis/6379.conf --loglevel debug
+</code></pre><p>所有在redis.conf的配置都支持用命令行来更改，只要和参数名字一样就可以了</p>
+<h2 id="使用Redis"><a href="#使用Redis" class="headerlink" title="使用Redis"></a>使用Redis</h2><hr>
+<p>你可以使用redis-cli来启动Redis客户端。开始一个redis-server的实例，然后再其他终端尝试下面的命令:</p>
+<pre><code>% cd src
+% ./redis-cli
+redis&gt; ping
+PONG
+redis&gt; set foo bar
+OK
+redis&gt; get foo
+&quot;bar&quot;
+redis&gt; incr mycounter
+(integer) 1
+redis&gt; incr mycounter
+(integer) 2
+redis&gt;
+</code></pre><p>你能在<a href="http://redis.io/commands" target="_blank" rel="noopener">http://redis.io/commands</a>找到所有可以用的命令。</p>
+<h2 id="安装Redis"><a href="#安装Redis" class="headerlink" title="安装Redis"></a>安装Redis</h2><hr>
+<p>安装 Redis 到默认目录 /usr/local/bin 使用:</p>
+<pre><code>% make install
+</code></pre><p>也可以使用 <code>make PREFIX=/some/other/directory install</code>到其他目录</p>
+<p><code>% make install</code>只能把可执行文件安装到你的系统，但是不会有配置信息</p>
+<p>初始化脚本和配置文件在合适的地方。如果你很少用Redis就不是太需要，但是如果想在安装的时候正确配置，Redis为Ubuntu和Debian提供了脚本：</p>
+<pre><code>% cd utils
+% ./install_server.sh
+</code></pre><p>这个脚本会问询问一系列的设置问题，然后作为后台守护进程在系统重启的时候再次启动。</p>
+<p>你可以使用叫做<code>/etc/init.d/redis_&lt;portnumber&gt;</code>的脚本停止并启动Redis<br>, 比如 <code>/etc/init.d/redis_6379</code>.</p>
+<h2 id="代码贡献"><a href="#代码贡献" class="headerlink" title="代码贡献"></a>代码贡献</h2><hr>
+<p>提示: 以任何形式对Redis工程的代码贡献, 包括发送通过Github的提交请求, 电子邮件和公共讨论组, 并且同意根据条款发布您的代码您可以在Redis中包含的<a href="https://github.com/antirez/redis/blob/unstable/COPYING" target="_blank" rel="noopener">COPYING</a>文件中找到的BSD许可证来源。</p>
+<p>请查看<a href="https://github.com/antirez/redis/blob/unstable/CONTRIBUTING" target="_blank" rel="noopener">COPYING</a>文件的来源方式查看更多信息。</p>
+<h2 id="Redis的内部构成"><a href="#Redis的内部构成" class="headerlink" title="Redis的内部构成"></a>Redis的内部构成</h2><p>===</p>
+<p>如果你正在读README你可能在Redis Github的第一页<br>或者是解压Redis工程后. 再这两种情况下你离源码基本只有一步之遥了, 所以我们在这里解释Redis源代码布局, 首先我们要知道每个文件的内容是什么, Redis服务器内部最重要的功能和结构等等。<br>我们将大致而不是深入的讲解，因为库文件很大，并且会不断变化，但是作为开始是很好的起点。同时大多数的代码都有评论和简单的跟随。</p>
+<h2 id="源文件布局构成"><a href="#源文件布局构成" class="headerlink" title="源文件布局构成"></a>源文件布局构成</h2><hr>
+<p>Redis的根目录就是包含这个README文件的目录，真正的Makefile文件和一个Redis和Sentinel的配置例子在<code>src</code>目录。<br>。你可以找一些shell脚本来执行Redis, Redis集群和Redis Sentinel单元测试, 这些实现在<code>tests</code>目录.</p>
+<p>在根目录中重要的目录:</p>
+<ul>
+<li><code>src</code>: 包含c语言写的 Redis 的实现。</li>
+<li><code>tests</code>: 单元测试, Tcl(一种脚本语言)实现。</li>
+<li><code>deps</code>: Redis的依赖库。 所有Redis编译需要的库都在这里面;<br>您的系统只需要提供<code>libc</code>，POSIX兼容接口和C编译器。 值得注意的是<code>deps</code>包含了<code>jemalloc</code>的副本, Linux下的内存分配器。 (下面的内容没找到。。)<code>deps</code>也包含了一下Redis项目开始的事情, 同时<code>anitrez/redis</code>不是主要的存储库 。 这个规则也有例外 <code>deps/geohash-int</code> 是一个Redis使用的低级地理编码库: 他起源于一个不同的项目, 但是存在比较大的分支，所以作为一个Redis中独立的实体来开发。</li>
+</ul>
+<p>同时也有一些其他的目录但是并不是我们的主要目标。<br>Redis的主要实现在<code>src</code>中,所以我们要把主要精力投入到当中去。<br>探索<code>src</code>中的每一个文件时，是随着顺序的进行而逻辑复杂性也会增加。</p>
+<p>提示: 最新的Redis会重构相当一部分内容. 函数名和文件名都有可能改变，所以你可以找到这些分支的映射在<code>unstable</code>目录中（在github上找）改变的最新文档。比如在Redis3.0中的<br><code>server.c</code>和<code>server.h</code> 被命名为了 <code>redis.c</code> 和 <code>redis.h</code>。不过无论如何数据结构的名字还是一样的。<br>记住所有的开发和提交都应该在<code>unstable</code> 的分支下去找。</p>
+<h2 id="server-h"><a href="#server-h" class="headerlink" title="server.h"></a>server.h</h2><hr>
+<p>理解程序如何工作的最简单方法是理解它使用的数据结构。<br>所以我们将从Redis主函数的头文件 <code>server.h</code>开始。</p>
+<p>所有的配置和共享状态的结构体都是定义成叫做<code>server</code>的全局结构体，<code>struct redisServer</code>类型。<br>一些在这个结构体中的重要字段:</p>
+<ul>
+<li><code>server.db</code> 是一个Redis用来存储数据的数据库数组.</li>
+<li><code>server.commands</code> 是一个命令的表.</li>
+<li><code>server.clients</code> 是连接到服务器的客户端的链接列表。</li>
+<li><code>server.master</code> 一个特殊的客户端, 主从结构中的主机。</li>
+</ul>
+<p>另一个重要叫做 <code>redisClient</code>的结构体数据时关于客户端的定义。这个结构体有很多字段，下面展示了主要部分：</p>
+<pre><code>struct client {
+    int fd;
+    sds querybuf;
+    int argc;
+    robj **argv;
+    redisDb *db;
+    int flags;
+    list *reply;
+    char buf[PROTO_REPLY_CHUNK_BYTES];
+    ... many other fields ...
+}
+</code></pre><p>这个结构体用于 <em>已经连接的客户端</em>:</p>
+<ul>
+<li><code>fd</code> 字段是客户端socket的标识符。</li>
+<li><code>argc</code> 和 <code>argv</code> 是用来执行客户端的命令, Redis提供了功能来读取命名行参数。</li>
+<li><code>querybuf</code> 累计客户端的请求，由Redis服务端根据协议解析分发到客户端来执行。</li>
+<li><code>reply</code> 和 <code>buf</code> 分别是动态和静态缓冲区，用于累积服务器发送给客户端的回复。 一旦文件描述符可写，这些缓冲区就会通过套接字发送给客户端。</li>
+</ul>
+<p>正如在上面的客户端结构中所看到的，命令中的参数<br>被描述为<code>robj</code>结构。 以下是完整的<code>robj</code>结构体：</p>
+<pre><code>typedef struct redisObject {
+    unsigned type:4;
+    unsigned encoding:4;
+    unsigned lru:LRU_BITS; /* lru time (relative to server.lruclock) */
+    int refcount;
+    void *ptr;
+} robj;
+</code></pre><p>基本上这个结构可以代表所有基本的Redis数据类型<br>字符串，列表，集合，排序集等。有趣的事是他有一个<code>type</code>字段， 所以他可能知道对象的类型, 以及一个 <code>refcount</code>字段, 所以相同的对象可以被引用，避免多次分配造成的内存浪费。 最后 <code>ptr</code>字段<br>指向真正的被引用对象, 不过内容可能会不同, 取决于使用 <code>encoding</code> 字段的编码.</p>
+<p>Redis对象广泛用于Redis内部, 可以避免许多地方间接访问的内存开销，最近在很多地方我们只使用未包装在Redis对象中的普通动态字符串。</p>
+<h2 id="server-c"><a href="#server-c" class="headerlink" title="server.c"></a>server.c</h2><hr>
+<p>Redis 服务端的入口<code>main()</code>函数在这里面定义。接下来是在Redis服务开始之前非常重要的步骤 。</p>
+<ul>
+<li><code>initServerConfig()</code> 用默认值初始化<code>server</code>结构体。</li>
+<li><code>initServer()</code> 给需要操作的数据结构分配内存, 启动socket监听和其他的一些事。</li>
+<li><code>aeMain()</code> 开始新连接的事件循环。</li>
+</ul>
+<p>事件循环定期调用两个特殊函数:</p>
+<ol>
+<li><code>serverCron()</code> 被定期调用 (根据 <code>server.hz</code> 的频率), 必须不停的执行任务，比如检测客户端的超时。</li>
+<li><code>beforeSleep()</code> 每一次事件循环都会触发，Redis会处理一些请求，并回到事件循环中去。</li>
+</ol>
+<p>在<code>server.c</code> 你可以找到Redis server处理其他事情的重要函数:</p>
+<ul>
+<li><code>call()</code> 在客户端中调用给定的命令。</li>
+<li><code>activeExpireCycle()</code> 通过<code>EXPIRE</code>命令处理超过生存时间的键失效。</li>
+<li><code>freeMemoryIfNeeded()</code>新的读写命令需要被执行但根据<code>maxmemory</code>指令，Redis内存不足。</li>
+<li>全局变量 <code>redisCommandTable</code> 定义了Redis的所有命令，指定命令的名称, 命令的实现, 的需要的参数个数, 和每个命令的其他属性。</li>
+</ul>
+<h2 id="networking-c"><a href="#networking-c" class="headerlink" title="networking.c"></a>networking.c</h2><hr>
+<p>这个文件定义了所有客户端的的 I/O(输入/输出)函数, 主从机<br>(在Redis中特殊的客户端):</p>
+<ul>
+<li><code>createClient()</code> 给新的客户端分配内存和初始化。</li>
+<li><code>addReply*()</code> 一系列实现的命令行函数用来添加数据结构到客户端， 他们会把命令的执行结果发送到客户端。</li>
+<li><code>writeToClient()</code> 被<em>可写事件处理</em><code>sendReplyToClient()</code>调用将输出缓冲区中待处理的数据传输到客户端 。</li>
+<li><code>readQueryFromClient()</code> 是 <em>可读事件处理</em> 并将从客户端读取的数据累积到查询缓冲区中。</li>
+<li><code>processInputBuffer()</code> 是根据Redis协议解析客户端查询缓冲区的入口点。 当命令准备好被处理的时候, 他讲调用在 <code>server.c</code> 定义的<code>processCommand()</code>  来进行实际命令的执行.</li>
+<li><code>freeClient()</code> 释放, 断开和移除一个客户端。</li>
+</ul>
+<h2 id="aof-c-and-rdb-c"><a href="#aof-c-and-rdb-c" class="headerlink" title="aof.c and rdb.c"></a>aof.c and rdb.c</h2><hr>
+<p>从名字上可以看出他是Redis持久化的实现RDB 和 AOF的地方。 Redis使用持久化模型基于调用 <code>fork()</code><br>，在主线程创建具有相同（共享）内存的线程<br>，次线程存储内存内容要磁盘上。 这是<code>rdb.c</code>用来在磁盘上创建快照 和<code>aof.c</code> 执行 AOF 重写当添加文件太大的时候使用的。在 <code>aof.c</code>实现的一些额外实现的函数是为了允许新命令附加到AOF文件，客户端来执行他们。</p>
+<p> <code>call()</code> 函数在<code>server.c</code>中定义的一个主管将命令写入 AOF.</p>
+<h2 id="db-c"><a href="#db-c" class="headerlink" title="db.c"></a>db.c</h2><hr>
+<p>某些Redis命令对特定数据类型进行操作, 其他是通用的。例如通用命令 <code>DEL</code> 和 <code>EXPIRE</code>。 这些命令是在Key上操作的不，而不是他们特殊的值。 所有的通用命令都被定义在 <code>db.c</code>。</p>
+<p>此外，<code>db.c</code>实现API，在Redis数据集上来执行某些没有直接访问内部数据结构操作。<br>在<code>db.c</code>中最重要的是实现了很多命令函数：</p>
+<ul>
+<li><code>lookupKeyRead()</code> 和 <code>lookupKeyWrite()</code> 用来或者去指定件的指针的值如果中不存在返回<code>NULL</code>。</li>
+<li><code>dbAdd()</code> 是更高级的<code>setKey()</code> 在Redis中创建一个新的键值.</li>
+<li><code>dbDelete()</code> 删除一个键和对应的值。</li>
+<li><code>emptyDb()</code> 删除一个整个的数据库或者整个数据库的定义。</li>
+</ul>
+<p>文件的其他部分实现了客户端的通用命令接口。</p>
+<h2 id="object-c"><a href="#object-c" class="headerlink" title="object.c"></a>object.c</h2><hr>
+<p>在Redis的<code>robj</code>结构对象中已经描述过。<br>在<code>object.c</code>中 有所有与Redis对象一起运行的函数基函数，如分配新对象的函数，处理引用计数等等，在文件中的函数:</p>
+<ul>
+<li><code>incrRefcount()</code> 和 <code>decrRefCount()</code> 用力增加和减少引用, 当减少到0时对象被释放。</li>
+<li><code>createObject()</code> 分配一个新的对象. 还有专门的函数来分配具有特定内容的字符串对象, 像 <code>createStringObjectFromLongLong()</code> 和相似的函数。</li>
+</ul>
+<p>这个文件也实现 <code>OBJECT</code> 的命令。</p>
+<h2 id="replication-c"><a href="#replication-c" class="headerlink" title="replication.c"></a>replication.c</h2><hr>
+<p>这是在Redis里面最复杂的文件之一, 建议在熟悉其余代之后再去阅读它。<br>在此文件中，实现了Redis的主从角色。</p>
+<p>在这个文件里面最重要的函数之一 <code>replicationFeedSlaves()</code> 他可以向客户端写命令来代表从机实例来连接我们的主机，这样从机就可以获得客户端的写操作:通过这样他们的数据集将与主机数据集保持同步。这个文件也实现了 <code>SYNC</code> 和 <code>PSYNC</code> 命令，用于执行主机和从机间的第一次同步或在断开连接后的继续复制。</p>
+<h2 id="其他-C-文件"><a href="#其他-C-文件" class="headerlink" title="其他 C 文件"></a>其他 C 文件</h2><hr>
+<ul>
+<li><code>t_hash.c</code>, <code>t_list.c</code>, <code>t_set.c</code>, <code>t_string.c</code> and <code>t_zset.c</code> 中包含了Redis的数据类型的实现。 它们实现了一个API来访问给定的数据类型, 和实现客户端对于这些类型的命令。</li>
+<li><code>ae.c</code> 实现了Redis的事件循环, 它是一个独立的库，比较易于阅读和理解。</li>
+<li><code>sds.c</code> 是Redis的字符串库, <a href="http://github.com/antirez/sds" target="_blank" rel="noopener">http://github.com/antirez/sds</a>有更多的信息。</li>
+<li><code>anet.c</code> 与内核公开的原始接口相比，它是一种以更简单的方式使用POSIX网络的库。</li>
+<li><code>dict.c</code> 逐渐实现一个非阻塞的Hash表。</li>
+<li><code>scripting.c</code> 实现Lua脚本. 它完全独立于Redis实现的一部分，并且很容易理解如果熟悉Lua API的话。</li>
+<li><code>cluster.c</code> 实现Redis集群。可能在熟悉Redis代码库的其余部分之后，才能比较好阅读与理解. 如果要 <code>cluster.c</code> 确保已经读过 <a href="http://redis.io/topics/cluster-spec" target="_blank" rel="noopener">Redis Cluster specification</a>.</li>
+</ul>
+<h2 id="解析Redis命令"><a href="#解析Redis命令" class="headerlink" title="解析Redis命令"></a>解析Redis命令</h2><hr>
+<p>所有的Redis命令都以下面的方式定义:</p>
+<pre><code>void foobarCommand(client *c) {
+    printf(&quot;%s&quot;,c-&gt;argv[1]-&gt;ptr); /* Do something with the argument. */
+    addReply(c,shared.ok); /* Reply something to the client. */
+}
+</code></pre><p>命令在 <code>server.c</code> 的命令中被引用:</p>
+<pre><code>{&quot;foobar&quot;,foobarCommand,2,&quot;rtF&quot;,0,NULL,0,0,0,0,0},
+</code></pre><p>在上面的例子 <code>2</code> 命令有的参数的个数,<code>&quot;rtF&quot;</code>是命令的标志, 作为 <code>server.c</code>命令表中的描述。</p>
+<p>命令以某些方式运行后他会返回打客户端,<br>通常是使用 <code>addReply()</code>或者是在<code>networking.c</code>定义的一些相似的函数。</p>
+<p>Redis源代码中有大量的命令实现，它可以作为实际命令使用的参考。来写一些测试命令可以很好地练习熟悉代码库.</p>
+<p>也有很多不是经常使用的文件没有提到。 我们希望能在第一步上对你有所帮助。<br>最终，您将在Redis代码库中找到自己的方式 :-)</p>
+<p>Enjoy!</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Redis/" rel="tag"># Redis</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/03/13/hello-world/" rel="prev" title="Hello World">
+                Hello World <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">categories</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">tags</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是Redis"><span class="nav-number">1.</span> <span class="nav-text">什么是Redis?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构建-Redis"><span class="nav-number">2.</span> <span class="nav-text">构建 Redis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修复依赖项或缓存构建项的问题"><span class="nav-number">3.</span> <span class="nav-text">修复依赖项或缓存构建项的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#处理在编译32位时候产生的问题"><span class="nav-number">4.</span> <span class="nav-text">处理在编译32位时候产生的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分配器"><span class="nav-number">5.</span> <span class="nav-text">分配器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#详细构件"><span class="nav-number">6.</span> <span class="nav-text">详细构件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行Redis"><span class="nav-number">7.</span> <span class="nav-text">运行Redis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Redis"><span class="nav-number">8.</span> <span class="nav-text">使用Redis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装Redis"><span class="nav-number">9.</span> <span class="nav-text">安装Redis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码贡献"><span class="nav-number">10.</span> <span class="nav-text">代码贡献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis的内部构成"><span class="nav-number">11.</span> <span class="nav-text">Redis的内部构成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#源文件布局构成"><span class="nav-number">12.</span> <span class="nav-text">源文件布局构成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#server-h"><span class="nav-number">13.</span> <span class="nav-text">server.h</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#server-c"><span class="nav-number">14.</span> <span class="nav-text">server.c</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#networking-c"><span class="nav-number">15.</span> <span class="nav-text">networking.c</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#aof-c-and-rdb-c"><span class="nav-number">16.</span> <span class="nav-text">aof.c and rdb.c</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#db-c"><span class="nav-number">17.</span> <span class="nav-text">db.c</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#object-c"><span class="nav-number">18.</span> <span class="nav-text">object.c</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#replication-c"><span class="nav-number">19.</span> <span class="nav-text">replication.c</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他-C-文件"><span class="nav-number">20.</span> <span class="nav-text">其他 C 文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解析Redis命令"><span class="nav-number">21.</span> <span class="nav-text">解析Redis命令</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Symbols count total: </span>
+    
+    <span title="Symbols count total">8k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    
+    <span title="Reading time total">8 mins.</span>
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.0.1</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="Total Visitors">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="Total Views">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.1"></script>
+
+  <script src="/js/src/motion.js?v=7.0.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.1"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.1"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
+
+  
+
+
+  <script src="/js/src/next-boot.js?v=7.0.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'm7PYcEhmlKqMUMeO7B8pzUOY-gzGzoHsz',
+    appKey: 'Tdve2G8ENTrBgbjgKvnjwWin',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn'
+  });
+</script>
+
+
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
