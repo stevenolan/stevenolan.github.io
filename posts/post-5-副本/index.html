@@ -571,20 +571,20 @@ Ported from <a href="https://mak1t0.cc/" target="_blank" rel="noreferrer noopene
 <pre><code>print 'this is pre tag'
 </code></pre>
 <p>Following is the syntax highlighted code block</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">getCookie</span>(<span style="color:#a6e22e">name</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">r</span> <span style="color:#66d9ef">interface</span>{}) (<span style="color:#f92672">*</span><span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Cookie</span>, <span style="color:#66d9ef">error</span>) {
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">rd</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">r</span>.(<span style="color:#f92672">*</span><span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Request</span>)
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">cookie</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">rd</span>.<span style="color:#a6e22e">Cookie</span>(<span style="color:#a6e22e">name</span>)
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>func <span style="color:#a6e22e">getCookie</span>(name string, r interface{}) (<span style="color:#f92672">*</span>http.Cookie, error) {
+</span></span><span style="display:flex;"><span>	rd :<span style="color:#f92672">=</span> r.(<span style="color:#f92672">*</span>http.Request)
+</span></span><span style="display:flex;"><span>	cookie, err :<span style="color:#f92672">=</span> rd.Cookie(name)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> err <span style="color:#f92672">!=</span> nil {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> nil, err
 </span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">cookie</span>, <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> cookie, nil
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">setCookie</span>(<span style="color:#a6e22e">cookie</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Cookie</span>, <span style="color:#a6e22e">w</span> <span style="color:#66d9ef">interface</span>{}) <span style="color:#66d9ef">error</span> {
+</span></span><span style="display:flex;"><span>func <span style="color:#a6e22e">setCookie</span>(cookie <span style="color:#f92672">*</span>http.Cookie, w interface{}) error {
 </span></span><span style="display:flex;"><span>	<span style="color:#75715e">// Get write interface registered using `Acquire` method in handlers.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">wr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">w</span>.(<span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">ResponseWriter</span>)
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">SetCookie</span>(<span style="color:#a6e22e">wr</span>, <span style="color:#a6e22e">cookie</span>)
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	wr :<span style="color:#f92672">=</span> w.(http.ResponseWriter)
+</span></span><span style="display:flex;"><span>	http.SetCookie(wr, cookie)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> nil
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>This is blockquote, Will make it <em>better now</em></p>
 <blockquote>
@@ -617,14 +617,14 @@ Ported from <a href="https://mak1t0.cc/" target="_blank" rel="noreferrer noopene
             <nav class="post-pagination">
 
                 
-                <a class="newer-posts" href="https://stevenolan.github.io/posts/post-5-%E5%89%AF%E6%9C%AC/">
-			Next<br>Typography - Test for features
+                <a class="newer-posts" href="https://stevenolan.github.io/posts/chinese/">
+			Next<br>中文文本测试
                 </a>
                 
                 
                 
-                <a class="older-posts" href="https://stevenolan.github.io/posts/post-1-%E5%89%AF%E6%9C%AC/">
-			Previous<br>(No comment) When You Have Too Much to Do
+                <a class="older-posts" href="https://stevenolan.github.io/posts/post-5/">
+			Previous<br>Typography - Test for features
                 </a>
                 
             </nav>
